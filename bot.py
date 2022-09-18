@@ -13,9 +13,6 @@ with open("missions.txt") as mr:
             missions_dict = json.load(mr)
             nodes_dict = json.load(nr)
 tier_dict = {"VoidT1":"Lith", "VoidT2":"Meso", "VoidT3":"Neo", "VoidT4":"Axi", "VoidT5":"Requiem"}
-with open("settings.txt") as sr:
-    a = sr.readlines()
-    token = a[0]
 channel_id = os.getenv("CHANNEL_ID")
 new_token = os.getenv("DISCORD_TOKEN")
 
