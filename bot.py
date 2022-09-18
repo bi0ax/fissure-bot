@@ -41,46 +41,72 @@ async def spfissures(ctx):
         tier = tier_dict[fissure["Modifier"]]
         desc += f"**{tier} {mission_type}** on {node} - {str(time_left_string)} Left\n"
     embed = discord.Embed(title="Fissures", description=desc)
+    embed.set_footer(text="Bot made by Bioax")
     await ctx.channel.send(embed=embed)
     
 @tasks.loop(seconds=15)
 async def new_fissure():
-    def find_diff_element(orig, new): #assuming d1 and d2 are already different
+    def find_diff_element_new(orig, new):
+        diff = []
         for x in new:
             if x not in orig:
-                return x
-            
+                diff.append(x)
+        return diff                
     fissure_data = fissures.Fissures().json
     sp_fissures = [x for x in fissure_data["ActiveMissions"] if "Hard" in list(x.keys()) and x["Hard"] == True] #this is automatically sorted by oldest to newest
     with open("mem.txt") as r:
         mem = json.load(r)
-    if sp_fissures != mem and len(sp_fissures) == len(mem):
-        print([x["Node"] for x in sp_fissures])
-        print([x["Node"] for x in mem])
-        with open("mem.txt", "w") as w: 
-            w.write(json.dumps(sp_fissures)) #updates the memory
-        new_fissure = find_diff_element(mem, sp_fissures)
-        print(new_fissure)
+    if sp_fissures != mem and len(sp_fissures) >= len(mem):
+        new_fissure = find_diff_element_new(mem, sp_fissures)
         try:
-            time_left = int(int(new_fissure["Expiry"]["$date"]["$numberLong"])/1000 - time.time())
-            hours = time_left // 3600 
-            minutes = time_left // 60
-            seconds = time_left % 60 #seconds as in x hours x minutes x seconds format
-            time_left_string = ""
-            if hours != 0:
-                time_left_string = f"{str(hours)}h {str(minutes-60)}m"
-            else:
-                time_left_string = f"{str(minutes)}m {str(seconds)}s"
-            node = nodes_dict[new_fissure["Node"]]
-            mission_type = missions_dict[new_fissure["MissionType"]]
-            tier = tier_dict[new_fissure["Modifier"]]
-            desc = f"**{tier} {mission_type}** on {node} - {str(time_left_string)} Left"
-            embed = discord.Embed(title="New Fissure", description=desc)
-            embed.set_footer(text="Bot made by Bioax")
-            channel = bot.get_channel(channel_id)
-            await channel.send(embed=embed)
+            #part 1
+            for fissure in new_fissure:
+                time_left = int(int(fissure["Expiry"]["$date"]["$numberLong"])/1000 - time.time())
+                hours = time_left // 3600 
+                minutes = time_left // 60
+                seconds = time_left % 60 #seconds as in x hours x minutes x seconds format
+                time_left_string = ""
+                if hours != 0:
+                    time_left_string = f"{str(hours)}h {str(minutes-60)}m"
+                else:
+                    time_left_string = f"{str(minutes)}m {str(seconds)}s"
+                node = nodes_dict[fissure["Node"]]
+                mission_type = missions_dict[fissure["MissionType"]]
+                tier = tier_dict[fissure["Modifier"]]
+                desc = f"**{tier} {mission_type}** on {node} - {str(time_left_string)} Left"
+                embed = discord.Embed(title="New Fissure", description=desc)
+                embed.set_footer(text="Bot made by Bioax")
+                channel = bot.get_channel(channel_id)
+                await channel.send(embed=embed)
+            with open("mem.txt", "w") as w: 
+                print("updated memory")
+                w.write(json.dumps(sp_fissures)) #updates the memory
+            
+            #part 2
+            desc = ""
+            for fissure in sp_fissures:
+                time_left = int(int(fissure["Expiry"]["$date"]["$numberLong"])/1000 - time.time())
+                hours = time_left // 3600 
+                minutes = time_left // 60
+                seconds = time_left % 60 #seconds as in x hours x minutes x seconds format
+                time_left_string = ""
+                if hours != 0:
+                    time_left_string = f"{str(hours)}h {str(minutes-60)}m"
+                else:
+                    time_left_string = f"{str(minutes)}m {str(seconds)}s"
+                node = nodes_dict[fissure["Node"]]
+                mission_type = missions_dict[fissure["MissionType"]]
+                tier = tier_dict[fissure["Modifier"]]
+                desc += f"**{tier} {mission_type}** on {node} - {str(time_left_string)} Left\n"
+            embedTwo = discord.Embed(title="Fissures", description=desc)
+            embedTwo.set_footer(text="Bot made by Bioax")
+            await channel.send(embed=embedTwo)
         except:
             print("ok")
+    elif sp_fissures != mem and len(sp_fissures) < len(mem):
+        with open("mem.txt", "w") as w: 
+            print("updated memory")
+            w.write(json.dumps(sp_fissures)) #updates the memory
     else:
         print("checked")
 
