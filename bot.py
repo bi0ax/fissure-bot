@@ -5,7 +5,6 @@ import fissures
 import time
 import datetime
 import os
-
 bot = commands.Bot(command_prefix='>')
 time_now_disc = lambda: datetime.datetime.now() + datetime.timedelta(hours=4)
 with open("missions.txt") as mr:
@@ -13,12 +12,20 @@ with open("missions.txt") as mr:
             missions_dict = json.load(mr)
             nodes_dict = json.load(nr)
 tier_dict = {"VoidT1":"Lith", "VoidT2":"Meso", "VoidT3":"Neo", "VoidT4":"Axi", "VoidT5":"Requiem"}
-channel_id = os.getenv("CHANNEL_ID")
-new_token = os.getenv("DISCORD_TOKEN")
+with open("settings.txt") as sr:
+    a = sr.readlines()
+    token = a[0]
+    channel_id = a[1]
+channel_id = os.environ["CHANNEL_ID"]
+new_token = os.environ["DISCORD_TOKEN"]
 
 @bot.event
 async def on_ready():
     print("Fissure bot ready")
+    world_state_data = fissures.Fissures().json
+    sp_fissures = [x for x in world_state_data["ActiveMissions"] if "Hard" in list(x.keys()) and x["Hard"] == True] #this is automatically sorted by oldest to newest
+    with open("mem.txt", "w") as m:
+        m.write(json.dumps(sp_fissures))
     new_fissure.start()
 
 @bot.command()
