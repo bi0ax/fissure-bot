@@ -4,6 +4,7 @@ import json
 import fissures
 import time
 import datetime
+import os
 
 bot = commands.Bot(command_prefix='>')
 time_now_disc = lambda: datetime.datetime.now() + datetime.timedelta(hours=4)
@@ -16,6 +17,8 @@ with open("settings.txt") as sr:
     a = sr.readlines()
     token = a[0]
     channel_id = int(a[1])
+new_token = os.getenv("DISCORD_TOKEN")
+
 @bot.event
 async def on_ready():
     print("Fissure bot ready")
@@ -112,4 +115,4 @@ async def new_fissure():
 
 
 if __name__ == "__main__":
-    bot.run(token)
+    bot.run(new_token)
