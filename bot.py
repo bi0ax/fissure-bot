@@ -16,7 +16,7 @@ tier_dict = {"VoidT1":"Lith", "VoidT2":"Meso", "VoidT3":"Neo", "VoidT4":"Axi", "
 with open("settings.txt") as sr:
     a = sr.readlines()
     token = a[0]
-    channel_id = int(a[1])
+channel_id = os.getenv("CHANNEL_ID")
 new_token = os.getenv("DISCORD_TOKEN")
 
 @bot.event
