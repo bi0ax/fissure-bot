@@ -16,7 +16,7 @@ with open("missions.txt") as mr:
 
 tier_dict = {"VoidT1":"Lith", "VoidT2":"Meso", "VoidT3":"Neo", "VoidT4":"Axi", "VoidT5":"Requiem"}
 new_token = "MTAyMTE3NDU1MTAzMzQzNDEyMw.GP__9J"
-channel_id = 1005561745416392784
+channel_id = 1012483593232203826
 
 @bot.event
 async def on_ready():
