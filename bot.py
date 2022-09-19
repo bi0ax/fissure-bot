@@ -5,7 +5,9 @@ import fissures
 import time
 import datetime
 import os
-bot = commands.Bot(command_prefix='>')
+intents = discord.Intents.all()
+intents.members = True
+bot = commands.Bot(command_prefix='>', intents=intents)
 time_now_disc = lambda: datetime.datetime.now() + datetime.timedelta(hours=4)
 with open("missions.txt") as mr:
         with open("nodes.txt") as nr:
