@@ -18,7 +18,7 @@ with open("settings.txt") as sr:
     token = a[0]
     #channel_id = a[1]
 
-new_token = "MTAwNTk4MDEzMjQyNDU2MDY1MA.GHwasg."
+new_token = "MTAyMTE3NDU1MTAzMzQzNDEyMw.GP__9J"
 channel_id = 1005561745416392784
 
 @bot.event
@@ -121,4 +121,4 @@ async def new_fissure():
 
 
 if __name__ == "__main__":
-    bot.run(new_token + "lZD6gSznopqH39vK9t7wXeWwQd_ewtOoZ0Kb6Q")
+    bot.run(new_token + ".HYKTTLl8uHMsic-Yw-tERliNiNCMf9NDFRAohc")
