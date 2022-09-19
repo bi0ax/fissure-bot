@@ -15,8 +15,8 @@ with open("missions.txt") as mr:
             nodes_dict = json.load(nr)
 
 tier_dict = {"VoidT1":"Lith", "VoidT2":"Meso", "VoidT3":"Neo", "VoidT4":"Axi", "VoidT5":"Requiem"}
-new_token = "MTAyMTE3NDU1MTAzMzQzNDEyMw.GP__9J"
-channel_id = 1021231523967553608
+new_token = os.getenv("DISCORD_TOKEN")
+channel_id = os.getenv("CHANNEL_ID")
 
 @bot.event
 async def on_ready():
@@ -53,10 +53,7 @@ async def spfissures(ctx):
 @tasks.loop(seconds=15)
 async def new_fissure():
     def find_diff_element_new(orig, new):
-        diff = []
-        for x in new:
-            if x not in orig:
-                diff.append(x)
+        diff = [x for x in new if x not in orig]
         return diff                
     fissure_data = fissures.Fissures().json
     sp_fissures = [x for x in fissure_data["ActiveMissions"] if "Hard" in list(x.keys()) and x["Hard"] == True] #this is automatically sorted by oldest to newest
@@ -118,4 +115,4 @@ async def new_fissure():
 
 
 if __name__ == "__main__":
-    bot.run(new_token + ".HYKTTLl8uHMsic-Yw-tERliNiNCMf9NDFRAohc")
+    bot.run(new_token)
