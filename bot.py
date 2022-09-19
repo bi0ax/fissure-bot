@@ -15,11 +15,6 @@ with open("missions.txt") as mr:
             nodes_dict = json.load(nr)
 
 tier_dict = {"VoidT1":"Lith", "VoidT2":"Meso", "VoidT3":"Neo", "VoidT4":"Axi", "VoidT5":"Requiem"}
-with open("settings.txt") as sr:
-    a = sr.readlines()
-    token = a[0]
-    #channel_id = a[1]
-
 new_token = "MTAyMTE3NDU1MTAzMzQzNDEyMw.GP__9J"
 channel_id = 1005561745416392784
 
