@@ -11,13 +11,15 @@ with open("missions.txt") as mr:
         with open("nodes.txt") as nr:
             missions_dict = json.load(mr)
             nodes_dict = json.load(nr)
+
 tier_dict = {"VoidT1":"Lith", "VoidT2":"Meso", "VoidT3":"Neo", "VoidT4":"Axi", "VoidT5":"Requiem"}
 with open("settings.txt") as sr:
     a = sr.readlines()
     token = a[0]
-    channel_id = a[1]
-channel_id = os.environ["CHANNEL_ID"]
-new_token = os.environ["DISCORD_TOKEN"]
+    #channel_id = a[1]
+
+new_token = "MTAwNTk4MDEzMjQyNDU2MDY1MA.GHwasg."
+channel_id = 1005561745416392784
 
 @bot.event
 async def on_ready():
@@ -119,4 +121,4 @@ async def new_fissure():
 
 
 if __name__ == "__main__":
-    bot.run(new_token)
+    bot.run(new_token + "lZD6gSznopqH39vK9t7wXeWwQd_ewtOoZ0Kb6Q")
