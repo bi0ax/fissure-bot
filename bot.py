@@ -16,7 +16,6 @@ with open("missions.txt") as mr:
 
 tier_dict = {"VoidT1":"Lith", "VoidT2":"Meso", "VoidT3":"Neo", "VoidT4":"Axi", "VoidT5":"Requiem"}
 new_token = os.getenv("DISCORD_TOKEN")
-print(new_token)
 
 @bot.event
 async def on_ready():
@@ -52,7 +51,7 @@ async def spfissures(ctx):
     
 @tasks.loop(seconds=15)
 async def new_fissure():
-    channel_id = os.getenv("CHANNEL_ID")
+    channel_id = int(os.getenv("CHANNEL_ID"))
     def find_diff_element_new(orig, new):
         diff = [x for x in new if x not in orig]
         return diff                
@@ -105,8 +104,8 @@ async def new_fissure():
             embedTwo = discord.Embed(title="Fissures", description=desc)
             embedTwo.set_footer(text="Bot made by Bioax")
             await channel.send(embed=embedTwo)
-        except:
-            print("ok")
+        except Exception as e:
+            print(e)
     elif sp_fissures != mem and len(sp_fissures) < len(mem):
         with open("mem.txt", "w") as w: 
             print("updated memory")
@@ -116,4 +115,4 @@ async def new_fissure():
 
 
 if __name__ == "__main__":
-    bot.run(str(new_token)) 
+    bot.run(new_token) 
