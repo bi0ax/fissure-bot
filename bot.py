@@ -15,7 +15,7 @@ with open("missions.txt") as mr:
             nodes_dict = json.load(nr)
 
 tier_dict = {"VoidT1":"Lith", "VoidT2":"Meso", "VoidT3":"Neo", "VoidT4":"Axi", "VoidT5":"Requiem"}
-new_token = os.getenv("DISCORD_TOKEN")
+token = os.getenv("DISCORD_TOKEN")
 
 @bot.event
 async def on_ready():
@@ -52,6 +52,8 @@ async def spfissures(ctx):
 @tasks.loop(seconds=15)
 async def new_fissure():
     channel_id = int(os.getenv("CHANNEL_ID"))
+    disruption_role_id = int(os.getenv("DISRUPTION_ID"))
+    survival_role_id = int(os.getenv("SURVIVAL_ID"))
     def find_diff_element_new(orig, new):
         diff = [x for x in new if x not in orig]
         return diff                
@@ -61,6 +63,7 @@ async def new_fissure():
         mem = json.load(r)
     if sp_fissures != mem and len(sp_fissures) >= len(mem):
         new_fissure = find_diff_element_new(mem, sp_fissures)
+        channel = bot.get_channel(channel_id)
         try:
             #part 1
             for fissure in new_fissure:
@@ -77,15 +80,22 @@ async def new_fissure():
                 mission_type = missions_dict[fissure["MissionType"]]
                 tier = tier_dict[fissure["Modifier"]]
                 desc = f"**{tier} {mission_type}** on {node} - {str(time_left_string)} Left"
+                if mission_type == "Survival":
+                    survival_ping = await channel.send(f"<@&{str(survival_role_id)}>")
+                    await survival_ping.delete()
+                    desc += f"\n<@&{str(survival_role_id)}>"
+                elif mission_type == "Disruption":
+                    disruption_ping = await channel.send(f"<@&{str(disruption_role_id)}>")
+                    await disruption_ping.delete()
+                    desc += f"\n<@&{str(disruption_role_id)}>"
                 embed = discord.Embed(title="New Fissure", description=desc)
                 embed.set_footer(text="Bot made by Bioax")
-                channel = bot.get_channel(channel_id)
                 await channel.send(embed=embed)
             with open("mem.txt", "w") as w: 
                 print("updated memory")
                 w.write(json.dumps(sp_fissures)) #updates the memory
             
-            #part 2
+            #part 2 message that lists everything
             desc = ""
             for fissure in sp_fissures:
                 time_left = int(int(fissure["Expiry"]["$date"]["$numberLong"])/1000 - time.time())
@@ -101,7 +111,7 @@ async def new_fissure():
                 mission_type = missions_dict[fissure["MissionType"]]
                 tier = tier_dict[fissure["Modifier"]]
                 desc += f"**{tier} {mission_type}** on {node} - {str(time_left_string)} Left\n"
-            embedTwo = discord.Embed(title="Fissures", description=desc)
+            embedTwo = discord.Embed(title="Current Fissures", description=desc)
             embedTwo.set_footer(text="Bot made by Bioax")
             await channel.send(embed=embedTwo)
         except Exception as e:
@@ -115,4 +125,4 @@ async def new_fissure():
 
 
 if __name__ == "__main__":
-    bot.run(new_token) 
+    bot.run("MTAwNTk4MDEzMjQyNDU2MDY1MA.GFQncs.2JD32sbYERJDsI08i08_eNwsiOQfA4pIIdiRys") 
