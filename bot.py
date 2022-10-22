@@ -16,6 +16,7 @@ with open("missions.txt") as mr:
 
 tier_dict = {"VoidT1":"Lith", "VoidT2":"Meso", "VoidT3":"Neo", "VoidT4":"Axi", "VoidT5":"Requiem"}
 new_token = os.getenv("DISCORD_TOKEN")
+print(new_token)
 
 @bot.event
 async def on_ready():
@@ -115,4 +116,4 @@ async def new_fissure():
 
 
 if __name__ == "__main__":
-    bot.run(new_token) 
+    bot.run(str(new_token)) 
