@@ -16,7 +16,6 @@ with open("missions.txt") as mr:
 
 tier_dict = {"VoidT1":"Lith", "VoidT2":"Meso", "VoidT3":"Neo", "VoidT4":"Axi", "VoidT5":"Requiem"}
 new_token = os.getenv("DISCORD_TOKEN")
-channel_id = os.getenv("CHANNEL_ID")
 
 @bot.event
 async def on_ready():
@@ -52,6 +51,7 @@ async def spfissures(ctx):
     
 @tasks.loop(seconds=15)
 async def new_fissure():
+    channel_id = os.getenv("CHANNEL_ID")
     def find_diff_element_new(orig, new):
         diff = [x for x in new if x not in orig]
         return diff                
