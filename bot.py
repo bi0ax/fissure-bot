@@ -125,4 +125,4 @@ async def new_fissure():
 
 
 if __name__ == "__main__":
-    bot.run("MTAwNTk4MDEzMjQyNDU2MDY1MA.GFQncs.2JD32sbYERJDsI08i08_eNwsiOQfA4pIIdiRys") 
+    bot.run(token) 
