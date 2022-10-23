@@ -30,12 +30,11 @@ async def on_ready():
 async def price(ctx, *, item):
     i = MarketItem(item)
     if i.valid == True:
-        embed = discord.Embed(title=f"{item.title()}", description=f"**Platinum:** {str(i.plat)} \n**Volume:** {str(i.volume)}", 
-        timestamp=time_now_disc(), color=discord.Color.green())
+        embed = discord.Embed(title=f"{item.title()}", description=f"**Platinum:** {str(i.plat)} \n**Volume:** {str(i.volume)}", color=discord.Color.green())
         embed.set_footer(text="Prices are pulled from warframe.market")
         await ctx.channel.send(embed=embed)
     else:
-        embed = discord.Embed(title="Error", description="Item not found", timestamp=time_now_disc(), color=discord.Colour.red())
+        embed = discord.Embed(title="Error", description="Item not found", color=discord.Colour.red())
         await ctx.channel.send(embed=embed)
         
 @bot.command()
@@ -44,7 +43,7 @@ async def drops(ctx, *, item):
     if not i.item_found:
         await ctx.channel.send("Item not found")
         return
-    embed = discord.Embed(title=f"Drop locations related to: *{item}*", timestamp=time_now_disc())
+    embed = discord.Embed(title=f"Drop locations related to: *{item}*")
     for x in i.item_drops:
         embed.add_field(name=x["item"], value=f"Place: {x['place']} \n Chance: {str(x['chance'])}% ({x['rarity']})", inline=(False if len(i.item_drops) <= 6 else True))
     await ctx.channel.send(embed=embed)
