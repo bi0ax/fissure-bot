@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands, tasks
 import json
-import fissures
+from fissures import *
 import time
 import datetime
 import os
@@ -20,15 +20,38 @@ token = os.getenv("DISCORD_TOKEN")
 @bot.event
 async def on_ready():
     print("Fissure bot ready")
-    world_state_data = fissures.Fissures().json
+    world_state_data = Fissures().json
     sp_fissures = [x for x in world_state_data["ActiveMissions"] if "Hard" in list(x.keys()) and x["Hard"] == True] #this is automatically sorted by oldest to newest
     with open("mem.txt", "w") as m:
         m.write(json.dumps(sp_fissures))
     new_fissure.start()
 
 @bot.command()
+async def price(ctx, *, item):
+    i = MarketItem(item)
+    if i.valid == True:
+        embed = discord.Embed(title=f"{item.title()}", description=f"**Platinum:** {str(i.plat)} \n**Volume:** {str(i.volume)}", 
+        timestamp=time_now_disc(), color=discord.Color.green())
+        embed.set_footer(text="Prices are pulled from warframe.market")
+        await ctx.channel.send(embed=embed)
+    else:
+        embed = discord.Embed(title="Error", description="Item not found", timestamp=time_now_disc(), color=discord.Colour.red())
+        await ctx.channel.send(embed=embed)
+        
+@bot.command()
+async def drops(ctx, *, item):
+    i = ItemDrop(item)
+    if not i.item_found:
+        await ctx.channel.send("Item not found")
+        return
+    embed = discord.Embed(title=f"Drop locations related to: *{item}*", timestamp=time_now_disc())
+    for x in i.item_drops:
+        embed.add_field(name=x["item"], value=f"Place: {x['place']} \n Chance: {str(x['chance'])}% ({x['rarity']})", inline=(False if len(i.item_drops) <= 6 else True))
+    await ctx.channel.send(embed=embed)
+
+@bot.command()
 async def spfissures(ctx):
-    world_state_data = fissures.Fissures().json
+    world_state_data = Fissures().json
     sp_fissures = [x for x in world_state_data["ActiveMissions"] if "Hard" in list(x.keys()) and x["Hard"] == True] #this is automatically sorted by oldest to newest
     desc = ""
     for fissure in sp_fissures:
@@ -48,7 +71,7 @@ async def spfissures(ctx):
     embed = discord.Embed(title="Fissures", description=desc)
     embed.set_footer(text="Bot made by Bioax")
     await ctx.channel.send(embed=embed)
-    
+
 @tasks.loop(seconds=15)
 async def new_fissure():
     channel_id = int(os.getenv("CHANNEL_ID"))
@@ -57,7 +80,7 @@ async def new_fissure():
     def find_diff_element_new(orig, new):
         diff = [x for x in new if x not in orig]
         return diff                
-    fissure_data = fissures.Fissures().json
+    fissure_data = Fissures().json
     sp_fissures = [x for x in fissure_data["ActiveMissions"] if "Hard" in list(x.keys()) and x["Hard"] == True] #this is automatically sorted by oldest to newest
     with open("mem.txt") as r:
         mem = json.load(r)
