@@ -55,19 +55,11 @@ async def spfissures(ctx):
     sp_fissures = [x for x in world_state_data["ActiveMissions"] if "Hard" in list(x.keys()) and x["Hard"] == True] #this is automatically sorted by oldest to newest
     desc = ""
     for fissure in sp_fissures:
-        time_left = int(int(fissure["Expiry"]["$date"]["$numberLong"])/1000 - time.time())
-        hours = time_left // 3600 
-        minutes = time_left // 60
-        seconds = time_left % 60 #seconds as in x hours x minutes x seconds format
-        time_left_string = ""
-        if hours != 0:
-            time_left_string = f"{str(hours)}h {str(minutes-60)}m"
-        else:
-            time_left_string = f"{str(minutes)}m {str(seconds)}s"
+        expiry = int(int(fissure["Expiry"]["$date"]["$numberLong"])/1000)
         node = nodes_dict[fissure["Node"]]
         mission_type = missions_dict[fissure["MissionType"]]
         tier = tier_dict[fissure["Modifier"]]
-        desc += f"**{tier} {mission_type}** on {node} - {str(time_left_string)} Left\n"
+        desc += f"**{tier} {mission_type}** on {node} - Ends <t:{str(expiry)}:R>\n"
     embed = discord.Embed(title="Fissures", description=desc)
     embed.set_footer(text="Bot made by Bioax")
     await ctx.channel.send(embed=embed)
@@ -90,19 +82,11 @@ async def new_fissure():
         try:
             #part 1
             for fissure in new_fissure:
-                time_left = int(int(fissure["Expiry"]["$date"]["$numberLong"])/1000 - time.time())
-                hours = time_left // 3600 
-                minutes = time_left // 60
-                seconds = time_left % 60 #seconds as in x hours x minutes x seconds format
-                time_left_string = ""
-                if hours != 0:
-                    time_left_string = f"{str(hours)}h {str(minutes-60)}m"
-                else:
-                    time_left_string = f"{str(minutes)}m {str(seconds)}s"
+                expiry = int(int(fissure["Expiry"]["$date"]["$numberLong"])/1000)
                 node = nodes_dict[fissure["Node"]]
                 mission_type = missions_dict[fissure["MissionType"]]
                 tier = tier_dict[fissure["Modifier"]]
-                desc = f"**{tier} {mission_type}** on {node} - {str(time_left_string)} Left"
+                desc = f"**{tier} {mission_type}** on {node} - Ends <t:{str(expiry)}:R>"
                 if mission_type == "Survival":
                     survival_ping = await channel.send(f"<@&{str(survival_role_id)}>")
                     await survival_ping.delete()
@@ -121,19 +105,11 @@ async def new_fissure():
             #part 2 message that lists everything
             desc = ""
             for fissure in sp_fissures:
-                time_left = int(int(fissure["Expiry"]["$date"]["$numberLong"])/1000 - time.time())
-                hours = time_left // 3600 
-                minutes = time_left // 60
-                seconds = time_left % 60 #seconds as in x hours x minutes x seconds format
-                time_left_string = ""
-                if hours != 0:
-                    time_left_string = f"{str(hours)}h {str(minutes-60)}m"
-                else:
-                    time_left_string = f"{str(minutes)}m {str(seconds)}s"
+                expiry = int(int(fissure["Expiry"]["$date"]["$numberLong"])/1000)
                 node = nodes_dict[fissure["Node"]]
                 mission_type = missions_dict[fissure["MissionType"]]
                 tier = tier_dict[fissure["Modifier"]]
-                desc += f"**{tier} {mission_type}** on {node} - {str(time_left_string)} Left\n"
+                desc += f"**{tier} {mission_type}** on {node} - Ends <t:{str(expiry)}:R>\n"
             embedTwo = discord.Embed(title="Current Fissures", description=desc)
             embedTwo.set_footer(text="Bot made by Bioax")
             await channel.send(embed=embedTwo)
@@ -148,4 +124,4 @@ async def new_fissure():
 
 
 if __name__ == "__main__":
-    bot.run(token) 
+    bot.run("MTAwNTk4MDEzMjQyNDU2MDY1MA.GfMgSh.pLCzYa4tw-SNteY_p0Exs0u7B_oVu-A2y5GgVo")
