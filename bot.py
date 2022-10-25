@@ -85,16 +85,18 @@ async def new_fissure():
                 node = nodes_dict[fissure["Node"]]
                 mission_type = missions_dict[fissure["MissionType"]]
                 tier = tier_dict[fissure["Modifier"]]
-                desc = f"**{tier} {mission_type}** on {node} - Ends <t:{str(expiry)}:R>"
+                embed = discord.Embed(title="New Fissure")
+                embed.description = f"**{tier} {mission_type}** on {node} - Ends <t:{str(expiry)}:R>"
                 if mission_type == "Survival":
                     survival_ping = await channel.send(f"<@&{str(survival_role_id)}>")
                     await survival_ping.delete()
-                    desc += f"\n<@&{str(survival_role_id)}>"
+                    embed.description += f"\n<@&{str(survival_role_id)}>"
+                    embed.color = 0xFF10F0
                 elif mission_type == "Disruption":
                     disruption_ping = await channel.send(f"<@&{str(disruption_role_id)}>")
                     await disruption_ping.delete()
-                    desc += f"\n<@&{str(disruption_role_id)}>"
-                embed = discord.Embed(title="New Fissure", description=desc)
+                    embed.description += f"\n<@&{str(disruption_role_id)}>"
+                    embed.color = 0xFF10F0
                 embed.set_footer(text="Bot made by Bioax")
                 await channel.send(embed=embed)
             with open("mem.txt", "w") as w: 
